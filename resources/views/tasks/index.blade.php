@@ -476,28 +476,40 @@
 
             </td>
 
+<!-- DUE DATE -->
 
-            <!-- DUE DATE -->
+<td>
 
-            <td>
+    @if($task->due_date)
 
-                @if($task->due_date)
+        @if(
+            \Carbon\Carbon::parse($task->due_date)->isPast()
+            && $task->status !== 'Completed'
+        )
 
-                    <span class="task-due-date">
+            <span class="task-due-date overdue">
+                <i data-lucide="alert-circle"></i>
+                Overdue
+            </span>
 
-                        <i data-lucide="calendar"></i>
+        @else
 
-                        {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}
+            <span class="task-due-date">
+                <i data-lucide="calendar"></i>
+                {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}
+            </span>
 
-                    </span>
+        @endif
 
-                @else
+    @else
 
-                    <span class="no-date">
-                        No date
-                    </span>
+        <span class="no-date">
+            No date
+        </span>
 
-                @endif
+    @endif
+
+</td>
 
             </td>
 

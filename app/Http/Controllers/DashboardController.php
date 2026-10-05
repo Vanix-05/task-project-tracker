@@ -24,6 +24,10 @@ class DashboardController extends BaseController
         $completedTasks = Task::where('status', 'Completed')
             ->count();
 
+        $overdueTasks = Task::whereNotNull('due_date')
+        ->whereDate('due_date', '<', now())
+        ->where('status', '!=', 'Completed')
+        ->count();
 
         // =========================================
         // COMPLETION RATE
@@ -75,7 +79,12 @@ class DashboardController extends BaseController
             ->orderBy('due_date')
             ->take(5)
             ->get();
-
+        $overdueTaskList = Task::whereNotNull('due_date')
+            ->whereDate('due_date', '<', now())
+            ->where('status', '!=', 'Completed')
+            ->orderBy('due_date')
+            ->take(5)
+            ->get();
 
         // =========================================
         // PROJECT BREAKDOWN
@@ -98,6 +107,8 @@ class DashboardController extends BaseController
             'pendingTasks',
             'inProgressTasks',
             'completedTasks',
+            'overdueTasks',
+            'overdueTaskList',
             'completionRate',
             'totalProjects',
             'highPriorityTasks',

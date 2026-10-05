@@ -441,7 +441,157 @@
 
 </section>
 
+<!-- =========================================
+     OVERDUE TASKS
+     ========================================= -->
 
+<section class="dashboard-card overdue-card">
+
+    <div class="dashboard-card-header">
+
+        <div>
+
+            <span class="card-eyebrow">
+                ATTENTION
+            </span>
+
+            <h2>
+                Overdue Tasks
+            </h2>
+
+            <p>
+                Tasks that still need to be completed.
+            </p>
+
+        </div>
+
+        <div class="overdue-count">
+
+            <i data-lucide="alert-circle"></i>
+
+            <span>
+                {{ $overdueTasks }}
+                {{ $overdueTasks == 1 ? 'task' : 'tasks' }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    @if($overdueTaskList->count() > 0)
+
+        <div class="overdue-list">
+
+            @foreach($overdueTaskList as $task)
+
+                <div class="overdue-task">
+
+                    <!-- ICON -->
+
+                    <div class="overdue-task-icon">
+
+                        <i data-lucide="triangle-alert"></i>
+
+                    </div>
+
+
+                    <!-- TASK INFORMATION -->
+
+                    <div class="overdue-task-info">
+
+                        <strong>
+                            {{ $task->task_name }}
+                        </strong>
+
+                        <span>
+
+                            {{ $task->project }}
+
+                            ·
+
+                            {{ $task->assigned_to }}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- DUE DATE -->
+
+                    <div class="overdue-task-date">
+
+                        <span>
+                            Due
+                        </span>
+
+                        <strong>
+                            {{ \Carbon\Carbon::parse($task->due_date)->format('M d, Y') }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    @if($task->status === 'In Progress')
+
+                        <span class="dashboard-status progress">
+                            In Progress
+                        </span>
+
+                    @else
+
+                        <span class="dashboard-status pending">
+                            Pending
+                        </span>
+
+                    @endif
+
+
+                    <!-- VIEW -->
+
+                    <a
+                        href="{{ route('tasks.show', $task->id) }}"
+                        class="overdue-view-btn"
+                        title="View task"
+                    >
+
+                        <i data-lucide="arrow-up-right"></i>
+
+                    </a>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+    @else
+
+        <!-- NO OVERDUE TASKS -->
+
+        <div class="overdue-empty">
+
+            <div class="overdue-empty-icon">
+
+                <i data-lucide="circle-check"></i>
+
+            </div>
+
+            <strong>
+                You're all caught up!
+            </strong>
+
+            <span>
+                There are no overdue tasks right now.
+            </span>
+
+        </div>
+
+    @endif
+
+</section>
 <!-- =========================================
      UPCOMING TASKS
      ========================================= -->

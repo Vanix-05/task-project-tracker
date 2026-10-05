@@ -1639,3 +1639,16 @@ body {
     }
 
 }
+
+/* ================================
+   OVERDUE TASK
+================================ */
+
+.task-due-date.overdue {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.task-due-date.overdue svg {
+    color: #ff6b6b;
+}
