@@ -156,7 +156,18 @@
                 </span>
 
             </a>
+            <a
+             href="{{ route('tasks.archive') }}"
+        class="dashboard-nav-link {{ request()->routeIs('tasks.archive') ? 'active' : '' }}"
+                >
+            <span class="nav-icon">
+            <i data-lucide="archive"></i>
+            </span>
 
+    <span class="nav-text">
+        Archive
+    </span>
+            </a>
 
             <!-- DEADLINES -->
 

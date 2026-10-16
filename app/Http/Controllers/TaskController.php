@@ -9,18 +9,18 @@ use Illuminate\Routing\Controller as BaseController;
 class TaskController extends BaseController
 {
     /**
-     * Display all tasks.
+     * Display all active tasks.
      */
-    public function index()
+   
+    public function index(Request $request)
     {
         $tasks = Task::latest()->get();
 
-        return view('tasks.index', compact('tasks'));
+        $viewMode = $request->query('view', 'list');
+
+    return view('tasks.index', compact('tasks', 'viewMode'));
     }
 
-    /**
-     * Show the form for creating a new task.
-     */
     public function create()
     {
         return view('tasks.create');
@@ -86,15 +86,79 @@ class TaskController extends BaseController
             ->with('success', 'Task updated successfully.');
     }
 
-    /**
-     * Delete a task.
+ /**
+     * Update a task's status from the Kanban board.
      */
+    public function updateStatus(Request $request, Task $task)
+    {
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                'string',
+                'in:Pending,In Progress,Completed',
+            ],
+        ]);
+
+        $task->update([
+            'status' => $validated['status'],
+        ]);
+
+        return response()->json([
+            'message' => 'Task status updated successfully.',
+            'task' => [
+                'id' => $task->id,
+                'status' => $task->status,
+            ],
+        ]);
+    }
     public function destroy(Task $task)
     {
         $task->delete();
 
         return redirect()
             ->route('tasks.index')
-            ->with('success', 'Task deleted successfully.');
+            ->with('success', 'Task archived successfully.');
+    }
+
+    /**
+     * Display archived tasks.
+     */
+    public function archive()
+    {
+        $tasks = Task::onlyTrashed()
+            ->latest('deleted_at')
+            ->get();
+
+        return view('tasks.archive', compact('tasks'));
+    }
+
+    /**
+     * Restore an archived task.
+     */
+    public function restore($id)
+    {
+        $task = Task::withTrashed()
+            ->findOrFail($id);
+
+        $task->restore();
+
+        return redirect()
+            ->route('tasks.archive')
+            ->with('success', 'Task restored successfully.');
+    }
+
+    /**
+     * Permanently delete an archived task.
+     */
+    public function forceDelete($id)
+    {
+        $task = Task::withTrashed()
+            ->findOrFail($id);
+
+        $task->forceDelete();
+
+        return redirect()
+            ->route('tasks.archive')
+            ->with('success', 'Task permanently deleted.');
     }
 }

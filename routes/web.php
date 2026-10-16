@@ -39,7 +39,21 @@ Route::get('/departments', [DepartmentController::class, 'index'])
     ->name('departments.index');
     
 
-    // TASKS
+// TASKS
+
+// Archive
+Route::get('/tasks/archive', [TaskController::class, 'archive'])
+    ->name('tasks.archive');
+
+Route::post('/tasks/{id}/restore', [TaskController::class, 'restore'])
+    ->name('tasks.restore');
+
+Route::delete('/tasks/{id}/force-delete', [TaskController::class, 'forceDelete'])
+    ->name('tasks.forceDelete');
+
+Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
+    ->name('tasks.updateStatus');
+// Regular CRUD
 Route::resource('tasks', TaskController::class);
 
     //LOGIN

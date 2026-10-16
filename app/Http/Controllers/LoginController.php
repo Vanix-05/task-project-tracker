@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
 
 class LoginController extends BaseController
@@ -15,23 +15,16 @@ class LoginController extends BaseController
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
-        $email = 'admin@example.com';
-        $password = 'password123';
-
-        if (
-            $request->email === $email &&
-            $request->password === $password
-        ) {
-            Session::put('logged_in', true);
-            Session::put('user_email', $request->email);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
             return redirect()
-                ->route('tasks.index')
+                ->intended(route('tasks.index'))
                 ->with('success', 'Welcome back! You are now logged in.');
         }
 
@@ -39,13 +32,15 @@ class LoginController extends BaseController
             ->withErrors([
                 'email' => 'Invalid email or password.',
             ])
-            ->withInput();
+            ->onlyInput('email');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Session::forget('logged_in');
-        Session::forget('user_email');
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()
             ->route('login')
