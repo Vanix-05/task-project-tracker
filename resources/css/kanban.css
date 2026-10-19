@@ -6,11 +6,12 @@
 
 .kanban-board {
     display: grid;
-    grid-template-columns: repeat(3, minmax(280px, 1fr));
-    gap: 20px;
-    width: 100%;
-    margin-top: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: start;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .kanban-column {
@@ -229,3 +230,49 @@
     }
 }
 
+.kanban-column {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.kanban-dropzone {
+    min-width: 0;
+    min-height: 180px;
+    box-sizing: border-box;
+}
+
+.kanban-task {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 1000px) {
+    .kanban-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .kanban-board {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Kanban drag-and-drop cursor */
+.kanban-task {
+    cursor: grab;
+}
+
+.kanban-task:active,
+.kanban-task.is-dragging {
+    cursor: grabbing;
+}
+
+/* Keep links and other interactive elements clickable */
+.kanban-task a,
+.kanban-task button {
+    cursor: pointer;
+}

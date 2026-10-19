@@ -2,6 +2,7 @@ import '../css/tasks.css';
 import '../css/login.css';
 import '../css/dashboard.css';
 import '../css/kanban.css';
+import './kanban.js';
 /* =========================================================
    TASK SEARCH & FILTERS
    ========================================================= */

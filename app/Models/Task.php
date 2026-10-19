@@ -18,4 +18,10 @@ class Task extends Model
         'status',
         'due_date',
     ];
+    
+public function projectRelation()
+{
+    return $this->belongsTo(Project::class, 'project', 'name');
+}
+
 }

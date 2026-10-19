@@ -3,6 +3,8 @@
 
 <head>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta charset="UTF-8">
 
     <meta
@@ -14,13 +16,7 @@
         @yield('title', 'Task & Project Tracker')
     </title>
 
-    @vite([
-        'resources/css/app.css',
-        'resources/css/tasks.css',
-        'resources/css/login.css',
-        'resources/css/dashboard.css',
-        'resources/js/app.js'
-    ])
+   @vite(['resources/js/app.js'])
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -110,6 +106,24 @@
 
                 <span class="nav-text">
                     Tasks
+                </span>
+
+            </a>
+
+            
+            <!-- PROJECTS -->
+
+            <a
+                href="{{ route('projects.index') }}"
+                class="dashboard-nav-link {{ request()->routeIs('projects.*') ? 'active' : '' }}"
+            >
+
+                <span class="nav-icon">
+                    <i data-lucide="folder-kanban"></i>
+                </span>
+
+                <span class="nav-text">
+                    Projects
                 </span>
 
             </a>
@@ -370,6 +384,11 @@
 <script>
     lucide.createIcons();
 </script>
+
+@stack('scripts')
+
+</body>
+</html>
 
 
 </body>

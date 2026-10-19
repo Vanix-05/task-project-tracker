@@ -55,7 +55,7 @@
 
         </div>
 
-        <strong class="dashboard-stat-number">
+      <strong class="dashboard-stat-number" id="liveTotalTasks">
             {{ $totalTasks }}
         </strong>
 
@@ -82,8 +82,8 @@
 
         </div>
 
-        <strong class="dashboard-stat-number">
-            {{ $pendingTasks }}
+       <strong class="dashboard-stat-number" id="livePendingTasks">
+        {{ $pendingTasks }}
         </strong>
 
         <span class="stat-description">
@@ -109,8 +109,8 @@
 
         </div>
 
-        <strong class="dashboard-stat-number">
-            {{ $inProgressTasks }}
+        <strong class="dashboard-stat-number" id="liveInProgressTasks">
+        {{ $inProgressTasks }}
         </strong>
 
         <span class="stat-description">
@@ -136,7 +136,7 @@
 
         </div>
 
-        <strong class="dashboard-stat-number">
+        <strong class="dashboard-stat-number" id="liveCompletedTasks">
             {{ $completedTasks }}
         </strong>
 
@@ -836,3 +836,51 @@
 
 
 @endsection
+
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const dashboardUrl = @json(route('dashboard.liveData'));
+
+    async function refreshDashboardStats() {
+        try {
+            const response = await fetch(dashboardUrl, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                cache: 'no-store'
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            const stats = {
+                liveTotalTasks: data.totalTasks,
+                livePendingTasks: data.pendingTasks,
+                liveInProgressTasks: data.inProgressTasks,
+                liveCompletedTasks: data.completedTasks
+            };
+
+            for (const [id, value] of Object.entries(stats)) {
+                const element = document.getElementById(id);
+
+                if (element && value !== undefined) {
+                    element.textContent = value;
+                }
+            }
+        } catch (error) {
+            console.error('Dashboard auto-refresh failed:', error);
+        }
+    }
+
+    refreshDashboardStats();
+    setInterval(refreshDashboardStats, 5000);
+});
+</script>
+@endpush
+

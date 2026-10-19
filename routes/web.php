@@ -7,19 +7,24 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+Route::resource('projects', ProjectController::class);
+
 // ATTENDANCE
 Route::resource('attendance', AttendanceController::class)
-    ->except(['show']);
+    ->except(['show']); 
 
 // DASHBOARD
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
-
+    
+Route::get('/dashboard/live-data', [DashboardController::class, 'liveData'])
+    ->name('dashboard.liveData');
 // EMPLOYEES
 
 Route::get('/employees/archive', [EmployeeController::class, 'archive'])
